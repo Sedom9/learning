@@ -1,5 +1,5 @@
 numpy==1.13.1
 nupic==1.0.5
 pip ==18.0 
-ipywidgets = 0.5
+
  
