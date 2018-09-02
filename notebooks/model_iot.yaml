@@ -1,0 +1,180 @@
+# Type of model that the rest of these parameters apply to.
+model: HTMPrediction
+
+
+# Parameters of the model to be created.
+modelParams:
+
+  # The type of inference that this model will perform.
+  # Supported values are :
+  # - TemporalNextStep
+  # - TemporalClassification
+  # - NontemporalClassification
+  # - TemporalAnomaly
+  # - NontemporalAnomaly
+  # - TemporalMultiStep
+  # - NontemporalMultiStep
+  inferenceType: TemporalMultiStep
+
+  # Parameters of the Sensor region
+  sensorParams:
+    # Sensor diagnostic output verbosity control:
+    # - verbosity == 0: silent
+    # - verbosity in [1 .. 6]: increasing level of verbosity
+    verbosity: 0
+
+    # List of encoders and their parameters.
+    encoders:
+    # encoding:
+    #   fieldname: encoding
+    #   name: encoding
+    #   n: 180
+    #   w: 5
+    #   minval: -20
+    #   maxval: 16
+    #   forced: True
+   #    type: ScalarEncoder
+     flow:
+       fieldname: flow
+       name: flow
+       n: 399
+       w: 21
+       forced : True
+       minval: 0.0
+       maxval: 18.0
+       type: ScalarEncoder
+  #   flow_bin:
+  #     fieldname: flow_bin
+  #     name: flow_bin 
+  #     n: 30
+  #     w: 15
+  #     forced: True
+ #      minval: 0
+#       maxval: 1
+#      type: ScalarEncoder
+     switch_event:
+       fieldname: switch_event
+       name: switch_event
+       minval: 19
+       maxval: 33
+       n: 75
+       w: 5
+       forced: True
+       type: ScalarEncoder
+   #  bezline:
+   #    fieldname: bezline
+   #    name: bezline
+   #    n: 363
+   #    w: 11
+   #    minval: 44.0
+   #    maxval: 77.0
+   #    forced: True
+   #    type: ScalarEncoder
+    # event:
+    #   fieldname: event
+    #   name: event
+    #   n: 22
+    #   w: 1
+    #   "minval" : 0
+    #   "maxval" : 22
+    #   "forced": True 
+    #   type: ScalarEncoder
+#     event:
+    #  fieldname: event
+    #  name: event
+    #   categoryList: category_1
+    #   w: 7
+    #   "forced": True
+    #   type: CategoryEncoder
+    # The "sensorAutoReset" specifies the period for automatically generated
+    # resets from a RecordSensor.
+    #
+    # If None, disable automatically generated resets. Also disable for all
+    # values that evaluate to 0. Example:
+    #   sensorAutoReset: null
+    #
+    #
+    # Valid keys for the "sensorAutoReset" option:
+    #   sensorAutoReset:
+    #    days: <int>
+    #     hours: <int>
+    #     minutes: <int>
+    #     seconds: <int>
+    #     milliseconds: <int>
+    #     microseconds: <int>
+    #     weeks: <int>
+    #
+    # Example for an automated reset every 1.5 days:
+    #   sensorAutoReset:
+    #     days: 1
+    #     hours: 12
+    #
+    sensorAutoReset: null
+
+
+  # Controls whether the Spatial Pooler (SP) region is enabled.
+  spEnable: true
+
+  # Parameters of the SP region. For detailed descriptions of each
+  # parameter, see the API docs for
+  # nupic.algorithms.spatial_pooler.SpatialPooler. Note that the OPF
+  # will only create one-dimensional input and spatial pooling
+  # structures, so during SP creation `columnCount` translates to
+  # `columnDimensions=(columnCount,)` and
+  # `inputDimensions=(inputWidth,)`.
+  spParams:
+    inputWidth: 0
+    columnCount: 2048
+    spVerbosity: 0
+    spatialImp: cpp
+    globalInhibition: 1
+    localAreaDensity: -1.0
+    numActiveColumnsPerInhArea: 40
+    seed: 1956
+    potentialPct: 0.85
+    synPermConnected: 0.1
+    synPermActiveInc: 0.05
+    synPermInactiveDec: 0.000501
+    boostStrength: 3.0
+
+  # Controls whether the Temporal Memory (TM) region is enabled.
+  tmEnable: true
+
+  # Parameters of the TM region. For detailed descriptions of each
+  # parameter, see the API docs for
+  # nupic.algorithms.backtracking_tm.BacktrackingTM.
+  tmParams:
+    verbosity: 0
+    columnCount: 2048
+    cellsPerColumn: 32
+    inputWidth: 2048
+    seed: 1960
+    temporalImp: cpp
+    newSynapseCount: 20
+    initialPerm: 0.21
+    permanenceInc: 0.5
+    permanenceDec: 0.01
+    maxAge: 0
+    globalDecay: 0.0
+    maxSynapsesPerSegment: 32
+    maxSegmentsPerCell: 128
+    minThreshold: 11
+    activationThreshold: 14
+    outputType: normal
+    predictedSegmentDecrement: 0.0
+    pamLength: 1
+
+  # Classifier parameters. For detailed descriptions of each parameter, see
+  # the API docs for nupic.algorithms.sdr_classifier.SDRClassifier.
+  clParams:
+    verbosity: 0
+    regionName: SDRClassifierRegion
+    alpha: 0.0505
+    steps: '1'
+    maxCategoryCount: 10000
+    implementation: cpp
+
+
+
+  # If set, don't create the SP network unless the user requests SP metrics.
+  trainSPNetOnlyIfRequested: false
